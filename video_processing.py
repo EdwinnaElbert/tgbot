@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 
 def handle_image(filename):
-  img = cv2.imread(filename)
+  img = cv2.imread(filename, cv2.IMREAD_COLOR)
   img = cv2.resize(img, (640, 480), interpolation = cv2.INTER_LINEAR)
 # faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 # cropped = []
@@ -15,10 +15,12 @@ def handle_image(filename):
 
   cap = cv2.VideoCapture('videos/phone.mp4')
   fourcc = cv2.VideoWriter_fourcc(*'MPEG')
-  out = cv2.VideoWriter('saved_videos/video.mp4',fourcc, 20.0, (640,480))
+  out = cv2.VideoWriter('saved_videos/126.mp4',fourcc, 20.0, (640, 480))
 # cap = cv2.VideoCapture(0)
-  while(True):
+  while(cap.isOpened()):
     ret, frame = cap.read()
+    if(ret == False):
+      break
     frame = cv2.resize(frame, (640, 480), interpolation = cv2.INTER_LINEAR)
     lower_range = np.array([0, 120, 0])
     upper_range = np.array([140, 255, 115])
@@ -29,11 +31,14 @@ def handle_image(filename):
     ## for c in contours:
     ##   cv2.drawContours(frame, [c], -1, (255,0,0), 3)
 
-    c = max(contours, key=cv2.contourArea)
-    extLeft = tuple(c[c[:, :, 0].argmin()][0])
-    extRight = tuple(c[c[:, :, 0].argmax()][0])
-    extTop = tuple(c[c[:, :, 1].argmin()][0])
-    extBottom = tuple(c[c[:, :, 1].argmax()][0])
+    try:
+      c = max(contours, key=cv2.contourArea)
+      extLeft = tuple(c[c[:, :, 0].argmin()][0])
+      extRight = tuple(c[c[:, :, 0].argmax()][0])
+      extTop = tuple(c[c[:, :, 1].argmin()][0])
+      extBottom = tuple(c[c[:, :, 1].argmax()][0])
+    except Exception as ex:
+      print('')
     pts1 = np.float32([[640,0], [0,480], [0,0], [640,480]])
     pts2 = np.float32([[extLeft[0], extLeft[1]], [extRight[0], extRight[1]], [extTop[0], extTop[1]], [extBottom[0], extBottom[1]]])
     M = cv2.getPerspectiveTransform(pts1,pts2)
@@ -43,8 +48,10 @@ def handle_image(filename):
     video_bg = cv2.bitwise_and(frame, frame, mask = mask_inv)
   # Take only region of image.
     img_fg = cv2.bitwise_and(img2, img2, mask = mask)
-
     dst = cv2.add(video_bg, img_fg)
+    # cv2.imshow('frame', dst)
+    # if cv2.waitKey(1) & 0xFF == ord('q'):
+    #     break
   # cv2.circle(dst, tuple(extLeft), 3, (0,0,255))
   # cv2.circle(dst, tuple(extRight), 3, (0,0,255))
   # cv2.circle(dst, tuple(extTop), 3, (0,0,255))
@@ -60,5 +67,3 @@ def handle_image(filename):
   cap.release()
   out.release()
   cv2.destroyAllWindows()
-
-handle_image('saved_images/new_file.jpg')
