@@ -1,0 +1,28 @@
+sudo apt-get install python-pip
+pip install --upgrade pip
+sudo apt-get install python-setuptools
+sudo apt-get install python-opencv
+sudo python2 -m pip install telebot
+-\\- numpy
+-\\- PyTelegramBotAPI
+
+sudo apt-get install build-essential
+sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
+--??-- opencv
+https://docs.opencv.org/2.4/doc/tutorials/introduction/linux_install/linux_install.html?highlight=installation
+---??---
+cfourcc
+
+
+
+3.0 version:
+out = cv2.VideoWriter('output.avi',cv2.VideoWriter_fourcc(*'XVID'), 20.0, (640,480))
+2.4 version:
+out = cv2.VideoWriter('output.avi',cv2.cv.CV_FOURCC('M','J','P','G'), 20.0, (640,480))
+
+
+
+libx264-dev
+sudo apt-get install libavcodec-ffmpeg-extra56
+!! https://docs.opencv.org/3.4.1/d2/de6/tutorial_py_setup_in_ubuntu.html
